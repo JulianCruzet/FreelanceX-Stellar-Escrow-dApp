@@ -29,8 +29,8 @@ const Navbar = () => {
                 to="/"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                   isActive('/')
-                    ? 'border-orange-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    ? 'border-orange-500 text-orange-500'
+                    : 'border-transparent text-gray-500 hover:border-orange-500 hover:text-orange-500'
                 }`}
               >
                 Home
@@ -39,8 +39,8 @@ const Navbar = () => {
                 to="/jobs"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                   isActive('/jobs')
-                    ? 'border-orange-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    ? 'border-orange-500 text-orange-500'
+                    : 'border-transparent text-gray-500 hover:border-orange-500 hover:text-orange-500'
                 }`}
               >
                 Find Work
@@ -49,8 +49,8 @@ const Navbar = () => {
                 to="/create-job"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                   isActive('/create-job')
-                    ? 'border-orange-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    ? 'border-orange-500 text-orange-500'
+                    : 'border-transparent text-gray-500 hover:border-orange-500 hover:text-orange-500'
                 }`}
               >
                 Post a Job
@@ -71,7 +71,7 @@ const Navbar = () => {
             ) : (
               <button
                 onClick={handleConnectWallet}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                className="inline-flex items-center px-4 py-2 border-none text-sm font-medium rounded-xl text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
               >
                 Connect Wallet
               </button>

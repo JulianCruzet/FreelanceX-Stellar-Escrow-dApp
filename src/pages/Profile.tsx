@@ -64,7 +64,7 @@ const Profile = () => {
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mb-8">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-shrink-0">
-              <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center">
+              <div className="w-32 h-32 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center">
                 <span className="text-4xl font-bold text-white">
                   {mockUser.name[0]}
                 </span>
@@ -113,14 +113,14 @@ const Profile = () => {
                     <h3 className="text-xl font-semibold text-gray-900 mb-1">{job.title}</h3>
                     <p className="text-gray-600">{job.company}</p>
                   </div>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
                     {job.status.replace('_', ' ')}
                   </span>
                 </div>
                 
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                   <div
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full"
                     style={{ width: `${job.progress}%` }}
                   />
                 </div>
@@ -129,7 +129,7 @@ const Profile = () => {
                   <span className="text-sm text-gray-500">{job.progress}% complete</span>
                   <Link
                     to={`/job/${job.id}`}
-                    className="text-indigo-600 hover:text-indigo-700 font-medium text-sm"
+                    className="text-orange-500 hover:text-orange-600 font-medium text-sm"
                   >
                     View Details →
                   </Link>
@@ -151,7 +151,7 @@ const Profile = () => {
                     <p className="text-gray-600">{job.company}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-indigo-600 font-medium">{job.amount}</p>
+                    <p className="text-orange-500 font-medium">{job.amount}</p>
                     <p className="text-sm text-gray-500">
                       Completed {new Date(job.completedAt!).toLocaleDateString()}
                     </p>

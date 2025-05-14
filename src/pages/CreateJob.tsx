@@ -73,7 +73,7 @@ const CreateJob = () => {
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="e.g., Full Stack Developer for Web3 Project"
                   required
                 />
@@ -89,7 +89,7 @@ const CreateJob = () => {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Describe the job requirements and responsibilities..."
                   required
                 />
@@ -106,7 +106,7 @@ const CreateJob = () => {
                     name="budget"
                     value={formData.budget}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="e.g., 5000"
                     required
                   />
@@ -122,7 +122,7 @@ const CreateJob = () => {
                     name="duration"
                     value={formData.duration}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="e.g., 4"
                     required
                   />
@@ -138,7 +138,7 @@ const CreateJob = () => {
                     name="skills"
                     value={formData.skills}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="e.g., React, TypeScript, Solidity"
                     required
                   />
@@ -154,7 +154,7 @@ const CreateJob = () => {
               <button
                 type="button"
                 onClick={addMilestone}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
+                className="px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors"
               >
                 Add Milestone
               </button>
@@ -185,7 +185,7 @@ const CreateJob = () => {
                         type="text"
                         value={milestone.title}
                         onChange={(e) => updateMilestone(index, 'title', e.target.value)}
-                        className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="e.g., Design Phase"
                         required
                       />
@@ -199,7 +199,7 @@ const CreateJob = () => {
                         type="number"
                         value={milestone.percentage}
                         onChange={(e) => updateMilestone(index, 'percentage', parseInt(e.target.value))}
-                        className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="e.g., 30"
                         min="0"
                         max="100"
@@ -215,7 +215,7 @@ const CreateJob = () => {
                     <textarea
                       value={milestone.description}
                       onChange={(e) => updateMilestone(index, 'description', e.target.value)}
-                      className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       rows={2}
                       placeholder="Describe what needs to be delivered in this milestone..."
                       required
@@ -230,7 +230,7 @@ const CreateJob = () => {
                       type="date"
                       value={milestone.dueDate}
                       onChange={(e) => updateMilestone(index, 'dueDate', e.target.value)}
-                      className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       required
                     />
                   </div>
@@ -243,7 +243,7 @@ const CreateJob = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              className="px-8 py-4 bg-gradient-to-r from-orange-600 to-yellow-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-yellow-700 transition-all transform hover:scale-105 shadow-lg"
             >
               Create Job
             </button>

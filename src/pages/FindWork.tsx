@@ -90,7 +90,7 @@ const FindWork = () => {
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Search jobs..."
                 />
               </div>
@@ -113,7 +113,7 @@ const FindWork = () => {
                             setSelectedSkills(selectedSkills.filter(s => s !== skill));
                           }
                         }}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
                       <span className="ml-2 text-sm text-gray-700">{skill}</span>
                     </label>
@@ -129,7 +129,7 @@ const FindWork = () => {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as 'recent' | 'budget')}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="recent">Most Recent</option>
                   <option value="budget">Highest Budget</option>
@@ -152,7 +152,7 @@ const FindWork = () => {
                       <h3 className="text-xl font-semibold text-gray-900 mb-1">{job.title}</h3>
                       <p className="text-gray-600">{job.company}</p>
                     </div>
-                    <span className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium">
+                    <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl font-medium">
                       {job.budget}
                     </span>
                   </div>
