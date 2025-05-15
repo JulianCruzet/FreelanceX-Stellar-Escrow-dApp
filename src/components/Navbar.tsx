@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // Import passkey-kit using dynamic import to avoid TypeScript errors
 // We'll initialize these in useEffect instead
@@ -14,58 +14,42 @@ const truncate = (str: string, length = 5): string => {
   return `${str.slice(0, length)}...${str.slice(-length)}`;
 };
 
-// Type for account data
-interface AccountData {
-  keyId: string;
-  contractId: string;
-  displayName?: string;
-}
-
 const Navbar: React.FC = () => {
-  const [PasskeyKit, setPasskeyKit] = useState<any>(null);
-  const [PasskeyServer, setPasskeyServer] = useState<any>(null);
-  const [account, setAccount] = useState<any>(null);
-  const [server, setServer] = useState<any>(null);
-  
-  const [activeKeyId, setActiveKeyId] = useState<string | null>(null);
+  const [keyId, setKeyId] = useState<string | null>(null);
   const [contractId, setContractId] = useState<string | null>(null);
   const [creating, setCreating] = useState<boolean>(false);
-  const [accounts, setAccounts] = useState<AccountData[]>([]);
-  const [showAccountSelector, setShowAccountSelector] = useState<boolean>(false);
-  
   const location = useLocation();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
   const [walletAddress, setWalletAddress] = useState<string>('');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load the passkey-kit module dynamically
   useEffect(() => {
     const loadPasskeyKit = async () => {
       try {
         const module = await import('passkey-kit');
-        setPasskeyKit(module.PasskeyKit);
-        setPasskeyServer(module.PasskeyServer);
+        PasskeyKit = module.PasskeyKit;
+        PasskeyServer = module.PasskeyServer;
         
-        // Initialize PasskeyKit and PasskeyServer
-        const passkeyKit = new module.PasskeyKit({
-          rpcUrl: process.env.PUBLIC_RPC_URL || "",
-          networkPassphrase: process.env.PUBLIC_NETWORK_PASSPHRASE || "",
-          walletWasmHash: process.env.PUBLIC_WALLET_WASM_HASH || "",
-          timeoutInSeconds: 30,
+        // Initialize PasskeyKit with ES256 and RS256 algorithms
+        account = new PasskeyKit({
+          rpcUrl: process.env.VITE_RPC_URL || "https://soroban-testnet.stellar.org",
+          networkPassphrase: process.env.VITE_NETWORK_PASSPHRASE || "Test SDF Network ; September 2015",
+          walletWasmHash: process.env.VITE_WALLET_WASM_HASH || "ecd990f0b45ca6817149b6175f79b32efb442f35731985a084131e8265c4cd90",
+          timeoutInSeconds: 29,
         });
 
-        const passkeyServer = new module.PasskeyServer({
-          rpcUrl: process.env.PUBLIC_RPC_URL || "",
-          launchtubeUrl: process.env.PUBLIC_LAUNCHTUBE_URL || "",
-          launchtubeJwt: process.env.PUBLIC_LAUNCHTUBE_JWT || "",
+        server = new PasskeyServer({
+          rpcUrl: process.env.VITE_RPC_URL || "https://soroban-testnet.stellar.org",
+          launchtubeUrl: process.env.VITE_LAUNCHTUBE_URL || "https://testnet.launchtube.xyz",
+          launchtubeJwt: process.env.VITE_LAUNCHTUBE_JWT || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5ZWJlOGNiMTIwYTQ1ZmJmMGU4YmMzZGYzODgxOTc2MGRhMWJlZDFjYTc3ZWYyMzk3YzYzNjY0ODk0NTdmNjc2IiwiZXhwIjoxNzUyNTA0NzMzLCJjcmVkaXRzIjoxMDAwMDAwMDAwLCJpYXQiOjE3NDUyNDcxMzN9.WSwj28KvHvd1xIzhdCY98HuJJZ_0329kRLbUn7wDDDA",
         });
         
-        setAccount(passkeyKit);
-        setServer(passkeyServer);
         setIsLoaded(true);
       } catch (error) {
         console.error('Error loading passkey-kit:', error);
+        setError('Failed to load authentication module');
       }
     };
     
@@ -77,114 +61,67 @@ const Navbar: React.FC = () => {
     return location.pathname === path;
   };
 
-  // Load saved accounts from localStorage
   useEffect(() => {
-    const loadSavedAccounts = () => {
-      try {
-        const savedAccountsJson = localStorage.getItem('freelanceX:accounts');
-        if (savedAccountsJson) {
-          const savedAccounts = JSON.parse(savedAccountsJson) as AccountData[];
-          setAccounts(savedAccounts);
-          
-          // Get the last active account
-          const lastActiveKeyId = localStorage.getItem('freelanceX:lastActiveKeyId');
-          if (lastActiveKeyId && savedAccounts.some(acc => acc.keyId === lastActiveKeyId)) {
-            setActiveKeyId(lastActiveKeyId);
-          } else if (savedAccounts.length > 0) {
-            // Default to first account if no active account is set
-            setActiveKeyId(savedAccounts[0].keyId);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading saved accounts:', error);
+    // Check for existing keyId in localStorage on component mount
+    if (localStorage.hasOwnProperty('ssd:keyId')) {
+      const storedKeyId = localStorage.getItem('ssd:keyId');
+      if (storedKeyId) {
+        setKeyId(storedKeyId);
       }
-    };
-    
-    loadSavedAccounts();
+    }
   }, []);
 
-  // Save accounts to localStorage when they change
   useEffect(() => {
-    if (accounts.length > 0) {
-      localStorage.setItem('freelanceX:accounts', JSON.stringify(accounts));
-    }
-  }, [accounts]);
-
-  // Connect wallet when activeKeyId changes and module is loaded
-  useEffect(() => {
+    // Connect wallet when keyId changes and module is loaded
     const connectWallet = async () => {
-      if (activeKeyId && isLoaded && account) {
+      if (keyId && isLoaded && account) {
         try {
-          setLoginError(null);
           const { contractId: cid } = await account.connectWallet({
-            keyId: activeKeyId,
+            keyId: keyId,
           });
-          
           setContractId(cid);
           setIsWalletConnected(true);
           setWalletAddress(truncate(cid));
-          
-          // Save the last active key ID
-          localStorage.setItem('freelanceX:lastActiveKeyId', activeKeyId);
         } catch (error) {
           console.error('Error connecting wallet:', error);
-          setLoginError('Failed to connect wallet. Please try again.');
-          setIsWalletConnected(false);
+          setError('Failed to connect wallet. Please try again.');
         }
       }
     };
 
     connectWallet();
-  }, [activeKeyId, isLoaded, account]);
-
-  // Add a new account to the accounts list
-  const addAccount = useCallback((keyId: string, contractId: string, displayName?: string) => {
-    setAccounts(prevAccounts => {
-      // Check if account already exists
-      const existingAccount = prevAccounts.find(acc => acc.keyId === keyId);
-      if (existingAccount) {
-        return prevAccounts;
-      }
-      
-      // Add new account
-      return [...prevAccounts, { keyId, contractId, displayName }];
-    });
-  }, []);
+  }, [keyId, isLoaded]);
 
   const handleLogin = async () => {
     if (!isLoaded || !account) {
-      console.error('PasskeyKit not loaded yet');
+      setError('Authentication module not loaded yet');
       return;
     }
     
     try {
-      setLoginError(null);
+      setError(null);
       const { keyIdBase64, contractId: cid } = await account.connectWallet();
       
-      // Add the account to our list if it's new
-      addAccount(keyIdBase64, cid);
-      
-      // Set as active account
-      setActiveKeyId(keyIdBase64);
-      localStorage.setItem('freelanceX:lastActiveKeyId', keyIdBase64);
+      setKeyId(keyIdBase64);
+      localStorage.setItem('ssd:keyId', keyIdBase64);
       
       setContractId(cid);
       setIsWalletConnected(true);
       setWalletAddress(truncate(cid));
     } catch (error) {
       console.error('Login error:', error);
-      setLoginError('Login failed. Please try again.');
+      setError('Login failed. Please try again.');
     }
   };
 
   const handleSignUp = async () => {
     if (!isLoaded || !account || !server) {
-      console.error('PasskeyKit not loaded yet');
+      setError('Authentication module not loaded yet');
       return;
     }
     
     setCreating(true);
-    setLoginError(null);
+    setError(null);
 
     try {
       const {
@@ -193,37 +130,44 @@ const Navbar: React.FC = () => {
         signedTx,
       } = await account.createWallet('FreelanceX', 'FreelanceX User');
 
-      await server.send(signedTx);
+      // Wait for server response
+      const response = await server.send(signedTx);
+      console.log('Wallet creation response:', response);
 
-      // Add the new account
-      addAccount(keyIdBase64, cid, 'FreelanceX User');
-      
-      // Set as active account
-      setActiveKeyId(keyIdBase64);
-      localStorage.setItem('freelanceX:lastActiveKeyId', keyIdBase64);
+      setKeyId(keyIdBase64);
+      localStorage.setItem('ssd:keyId', keyIdBase64);
 
       setContractId(cid);
       setIsWalletConnected(true);
       setWalletAddress(truncate(cid));
     } catch (error) {
       console.error('Sign up error:', error);
-      setLoginError('Registration failed. Please try again.');
+      setError('Registration failed. Please try again.');
     } finally {
       setCreating(false);
     }
   };
 
   const handleLogout = () => {
-    setActiveKeyId(null);
+    setKeyId(null);
     setContractId(null);
     setIsWalletConnected(false);
     setWalletAddress('');
-    localStorage.removeItem('freelanceX:lastActiveKeyId');
-  };
+    setError(null);
 
-  const switchAccount = (keyId: string) => {
-    setActiveKeyId(keyId);
-    setShowAccountSelector(false);
+    // Clear local storage items with ssd: prefix
+    Object.keys(localStorage).forEach((key) => {
+      if (key.includes('ssd:')) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear session storage items with ssd: prefix
+    Object.keys(sessionStorage).forEach((key) => {
+      if (key.includes('ssd:')) {
+        sessionStorage.removeItem(key);
+      }
+    });
   };
 
   return (
@@ -270,60 +214,14 @@ const Navbar: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            {loginError && (
-              <div className="text-red-500 text-sm">{loginError}</div>
+            {error && (
+              <span className="text-sm text-red-500">{error}</span>
             )}
-            
             {isWalletConnected || contractId ? (
               <>
-                <div className="relative">
-                  <button 
-                    onClick={() => setShowAccountSelector(!showAccountSelector)}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-gray-700 bg-gray-100 hover:bg-gray-200"
-                  >
-                    <span className="text-sm text-gray-500 truncate max-w-xs">
-                      {walletAddress || (contractId ? truncate(contractId, 4) : '')}
-                    </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  {showAccountSelector && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b">
-                          Your Accounts
-                        </div>
-                        {accounts.map((acc) => (
-                          <button
-                            key={acc.keyId}
-                            onClick={() => switchAccount(acc.keyId)}
-                            className={`block w-full text-left px-4 py-2 text-sm ${
-                              activeKeyId === acc.keyId ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'
-                            }`}
-                            role="menuitem"
-                          >
-                            {truncate(acc.contractId, 4)}
-                          </button>
-                        ))}
-                        <div className="border-t">
-                          <button
-                            onClick={() => {
-                              setShowAccountSelector(false);
-                              handleSignUp();
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-orange-500 hover:bg-gray-50"
-                            role="menuitem"
-                          >
-                            Add New Account
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
+                <span className="text-sm text-gray-500 truncate max-w-xs">
+                  {walletAddress || (contractId ? truncate(contractId, 4) : '')}
+                </span>
                 <Link
                   to="/profile"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-orange-500 bg-orange-50 hover:bg-orange-100"
