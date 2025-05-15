@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import Footer from '../components/Footer';
-import {}
+import Server from '@stellar/stellar-sdk';
+import { TransactionBuilder, Networks, Keypair, Operation } from '@stellar/stellar-sdk';
+import dotenv from 'dotenv';
+dotenv.config();
 
 interface Milestone {
   title: string;
@@ -49,25 +52,47 @@ const CreateJob = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // extract from data
+
     const { title, description, budget, skills, duration } = formData;
-
-    const cliCommand = `stellar contract invoke \
-      --network testnet \
-      --source ${SECRET_SOROBAN} \
-      --id ${SOROBAN_ID} \ 
-      -- \
-      post_bounty \
-      --creator {public key} \
-      --description "${description}" \
-      --token CA4KNSGXAI47V7AQLIOAXZ7FX4V4HLS6QNYFGRNFZM2UEOJTYFNM6OKC \
-      --amount ${parseInt(budget)}`
-
-    console.log('CLI Command:', cliCommand);
-    
-    navigate('/jobs');
-  };
+    const amount = parseInt(budget);
+  
+    const secretKey = process.env.REACT_APP_SECRET_SOROBAN as string;
+    const keypair = Keypair.fromSecret(secretKey);
+    const publicKey = keypair.publicKey();
+  
+    const server = new Server('https://horizon-testnet.stellar.org');
+    const networkPassphrase = Networks.TESTNET;
+  
+    try {
+      // Fetch the source account from the network
+      const account = await server.loadAccount(publicKey);
+  
+      // Create transaction
+      const tx = new TransactionBuilder(account, {
+        fee: await server.fetchBaseFee(),
+        networkPassphrase,
+      })
+        .addOperation(Operation.manageData({
+          name: 'post_bounty',
+          value: Buffer.from(JSON.stringify({
+            creator: publicKey,
+            description,
+            token: 'CA4KNSGXAI47V7AQLIOAXZ7FX4V4HLS6QNYFGRNFZM2UEOJTYFNM6OKC',
+            amount,
+          })),
+        }))
+        .setTimeout(30)
+        .build();
+  
+      tx.sign(keypair);
+  
+      const response = await server.submitTransaction(tx);
+      console.log('Transaction Successful!', response);
+      navigate('/jobs');
+    } catch (error) {
+      console.error('Transaction failed', error);
+    }
+  };  
 
   return (
     <PageTransition>
