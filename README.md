@@ -34,7 +34,7 @@ src/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/freelancex.git
+   git clone https://github.com/JulianCruzet/FreelanceX-Stellar-Escrow-dApp
    cd freelancex
    ```
 

@@ -70,11 +70,27 @@ const HERO_VIDEO_URL = "/workflowBroll.mov";
 
 const Home = () => {
   const [currentStory, setCurrentStory] = useState(0);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentStory((prev) => (prev + 1) % successStories.length);
     }, CAROUSEL_INTERVAL);
     return () => clearInterval(timer);
+  }, []);
+
+  // Add effect to ensure video autoplay
+  useEffect(() => {
+    if (videoRef.current) {
+      const playVideo = async () => {
+        try {
+          await videoRef.current?.play();
+        } catch (error) {
+          console.log('Autoplay failed:', error);
+        }
+      };
+      playVideo();
+    }
   }, []);
 
   const goToStory = (idx: number) => setCurrentStory(idx);
@@ -87,11 +103,13 @@ const Home = () => {
       <section className="relative w-full h-[650px] flex items-center justify-center overflow-hidden bg-gradient-to-r from-yellow-400 to-orange-500">
         {/* Local video background */}
         <video
+          ref={videoRef}
           src={HERO_VIDEO_URL}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         />
         {/* Overlay: always present for contrast */}
