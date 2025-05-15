@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import Footer from '../components/Footer';
+import {}
 
 interface Milestone {
   title: string;
@@ -48,8 +49,23 @@ const CreateJob = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Integrate with Soroban smart contract
-    console.log({ ...formData, milestones });
+    
+    // extract from data
+    const { title, description, budget, skills, duration } = formData;
+
+    const cliCommand = `stellar contract invoke \
+      --network testnet \
+      --source ${SECRET_SOROBAN} \
+      --id ${SOROBAN_ID} \ 
+      -- \
+      post_bounty \
+      --creator {public key} \
+      --description "${description}" \
+      --token CA4KNSGXAI47V7AQLIOAXZ7FX4V4HLS6QNYFGRNFZM2UEOJTYFNM6OKC \
+      --amount ${parseInt(budget)}`
+
+    console.log('CLI Command:', cliCommand);
+    
     navigate('/jobs');
   };
 
