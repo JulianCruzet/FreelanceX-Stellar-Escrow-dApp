@@ -1,156 +1,147 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import PageTransition from '../components/PageTransition';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Job } from '../services/contract';
 
-interface Milestone {
-  id: number;
-  title: string;
-  description: string;
-  percentage: number;
-  dueDate: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'approved';
-}
+const JobDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-const mockJob = {
-  id: 1,
-  title: 'Full Stack Developer',
-  budget: '5000 USDC',
-  description: 'Looking for an experienced full stack developer to build a decentralized application...',
-  skills: ['React', 'TypeScript', 'Solidity'],
-  company: 'Web3 Ventures',
-  location: 'Remote',
-  duration: '4 weeks',
-  milestones: [
-    {
-      id: 1,
-      title: 'Design Phase',
-      description: 'Create wireframes and design system',
-      percentage: 30,
-      dueDate: '2024-03-15',
-      status: 'completed' as const,
-    },
-    {
-      id: 2,
-      title: 'MVP Development',
-      description: 'Implement core features and smart contracts',
-      percentage: 40,
-      dueDate: '2024-03-30',
-      status: 'in_progress' as const,
-    },
-    {
-      id: 3,
-      title: 'Testing & Deployment',
-      description: 'Comprehensive testing and mainnet deployment',
-      percentage: 30,
-      dueDate: '2024-04-15',
-      status: 'pending' as const,
-    },
-  ],
-};
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        // TODO: Implement job fetching logic using the id
+        const mockJob: Job = {
+          id: id || '',
+          title: 'Sample Job',
+          description: 'This is a sample job description.',
+          budget: 1000,
+          milestones: [
+            {
+              id: '1',
+              title: 'Initial Setup',
+              description: 'Set up project structure and environment',
+              amount: 300,
+              dueDate: '2024-04-01',
+              status: 'pending',
+              percentage: 30
+            }
+          ],
+          status: 'open',
+          clientId: 'client123'
+        };
+        setJob(mockJob);
+      } catch (err) {
+        setError('Failed to load job details');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const JobDetails = () => {
-  const { id } = useParams();
-  const [job] = useState(mockJob);
-
-  const getStatusColor = (status: Milestone['status']) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-700';
-      case 'in_progress':
-        return 'bg-orange-100 text-orange-700';
-      case 'approved':
-        return 'bg-orange-100 text-orange-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
+    if (id) {
+      fetchJobDetails();
     }
-  };
+  }, [id]);
 
-  const handleApproveMilestone = async (milestoneId: number) => {
-    // TODO: Integrate with Soroban smart contract
-    console.log('Approving milestone:', milestoneId);
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !job) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
+          <p className="text-gray-600 mb-4">{error || 'Job not found'}</p>
+          <button
+            onClick={() => navigate('/jobs')}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            Back to Jobs
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <PageTransition>
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Job Header */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mb-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
-              <p className="text-gray-600">{job.company}</p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="container mx-auto px-4 py-8"
+    >
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                {job.status}
+              </span>
+              <span className="text-gray-600">Budget: {job.budget} XLM</span>
             </div>
-            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl font-medium">
-              {job.budget}
-            </span>
+            <button
+              onClick={() => navigate('/jobs')}
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              Back to Jobs
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="flex items-center gap-2 text-gray-600">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {job.location}
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {job.duration}
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              {job.skills.join(', ')}
+          <div className="prose max-w-none mb-8">
+            <h2 className="text-xl font-semibold mb-2">Description</h2>
+            <p className="text-gray-700">{job.description}</p>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Milestones</h2>
+            <div className="space-y-4">
+              {job.milestones.map((milestone) => (
+                <div
+                  key={milestone.id}
+                  className="border rounded-lg p-4 bg-gray-50"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-medium">{milestone.title}</h3>
+                    <span className="px-2 py-1 bg-gray-200 rounded text-sm">
+                      {milestone.status}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 mb-2">{milestone.description}</p>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>Amount: {milestone.amount} XLM</span>
+                    <span>Due: {milestone.dueDate}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <p className="text-gray-700">{job.description}</p>
-        </div>
-
-        {/* Milestones */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Milestones</h2>
-          <div className="space-y-6">
-            {job.milestones.map((milestone) => (
-              <div key={milestone.id} className="p-6 border border-gray-200 rounded-xl">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-1">{milestone.title}</h3>
-                    <p className="text-gray-600">{milestone.description}</p>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(milestone.status)}`}>
-                    {milestone.status.replace('_', ' ')}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <span className="text-sm text-gray-500">Due Date</span>
-                    <p className="text-gray-900">{new Date(milestone.dueDate).toLocaleDateString()}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-500">Percentage</span>
-                    <p className="text-gray-900">{milestone.percentage}%</p>
-                  </div>
-                </div>
-
-                {milestone.status === 'completed' && (
-                  <button
-                    onClick={() => handleApproveMilestone(milestone.id)}
-                    className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all transform hover:scale-105 shadow-lg"
-                  >
-                    Approve & Release Payment
-                  </button>
-                )}
-              </div>
-            ))}
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => navigate('/jobs')}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {/* TODO: Implement apply logic */}}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            >
+              Apply Now
+            </button>
           </div>
         </div>
       </div>
-    </PageTransition>
+    </motion.div>
   );
 };
 

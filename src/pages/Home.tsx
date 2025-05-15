@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 
 const featuredJobs = [
   {
@@ -37,80 +36,20 @@ const featuredJobs = [
   },
 ];
 
-const successStories = [
-  {
-    name: 'Alice Johnson',
-    role: 'Full Stack Developer',
-    text: 'FreelanceX made it so easy to get paid securely. The escrow system gave me peace of mind and my client was happy too!',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-  },
-  {
-    name: 'Carlos Rivera',
-    role: 'UI/UX Designer',
-    text: 'I love how transparent and fast the process is. I found great clients and got paid instantly after milestone approval.',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-  },
-  {
-    name: 'Sophie Lee',
-    role: 'Smart Contract Engineer',
-    text: 'The smart contract escrow is a game changer. No more chasing payments. Highly recommend FreelanceX!',
-    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-  },
-  {
-    name: 'David Kim',
-    role: 'DeFi Project Owner',
-    text: 'We hired top talent and the payment process was seamless. The platform is intuitive and secure.',
-    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
-  },
-];
-
-const CAROUSEL_INTERVAL = 5000;
-
-const HERO_VIDEO_URL = "/workflowBroll.mov";
-
-const Home = () => {
-  const [currentStory, setCurrentStory] = useState(0);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentStory((prev) => (prev + 1) % successStories.length);
-    }, CAROUSEL_INTERVAL);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Add effect to ensure video autoplay
-  useEffect(() => {
-    if (videoRef.current) {
-      const playVideo = async () => {
-        try {
-          await videoRef.current?.play();
-        } catch (error) {
-          console.log('Autoplay failed:', error);
-        }
-      };
-      playVideo();
-    }
-  }, []);
-
-  const goToStory = (idx: number) => setCurrentStory(idx);
-  const prevStory = () => setCurrentStory((prev) => (prev - 1 + successStories.length) % successStories.length);
-  const nextStory = () => setCurrentStory((prev) => (prev + 1) % successStories.length);
-
+const Home: React.FC = () => {
   return (
     <PageTransition>
       {/* HERO SECTION: Full local video background with overlay and centered content */}
       <section className="relative w-full h-[650px] flex items-center justify-center overflow-hidden bg-gradient-to-r from-yellow-400 to-orange-500">
         {/* Local video background */}
         <video
-          ref={videoRef}
-          src={HERO_VIDEO_URL}
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          src="/workflowBroll.mov"
         />
         {/* Overlay: always present for contrast */}
         <div className="absolute inset-0 bg-black/40 z-20 transition-opacity duration-700 opacity-100" />

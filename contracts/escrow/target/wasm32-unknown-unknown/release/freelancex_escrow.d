@@ -1,0 +1,1 @@
+/Users/juliancruzet/Test/freelancex/contracts/escrow/target/wasm32-unknown-unknown/release/freelancex_escrow.wasm: /Users/juliancruzet/Test/freelancex/contracts/escrow/src/errors.rs /Users/juliancruzet/Test/freelancex/contracts/escrow/src/events.rs /Users/juliancruzet/Test/freelancex/contracts/escrow/src/lib.rs /Users/juliancruzet/Test/freelancex/contracts/escrow/src/types.rs

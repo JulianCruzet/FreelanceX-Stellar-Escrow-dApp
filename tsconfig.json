@@ -18,7 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@stellar/stellar-sdk/*": ["./node_modules/@stellar/stellar-sdk/*"]
+    }
   },
   "include": [
     "src"
