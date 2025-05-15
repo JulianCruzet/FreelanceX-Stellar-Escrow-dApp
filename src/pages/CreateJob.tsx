@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
+import Footer from '../components/Footer';
 
 interface Milestone {
   title: string;
@@ -250,6 +251,7 @@ const CreateJob = () => {
           </div>
         </form>
       </div>
+      <Footer />
     </PageTransition>
   );
 };
