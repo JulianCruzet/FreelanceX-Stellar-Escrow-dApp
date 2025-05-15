@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import Footer from '../components/Footer';
+import { useContract } from '../hooks/useContract';
+import { useWallet } from '../hooks/useWallet';
 
 interface Milestone {
   title: string;
@@ -12,6 +14,11 @@ interface Milestone {
 
 const CreateJob = () => {
   const navigate = useNavigate();
+  const { createJob } = useContract();
+  const { isConnected, publicKey, connect } = useWallet();
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [milestones, setMilestones] = useState<Milestone[]>([
     { title: '', description: '', percentage: 0, dueDate: '' }
   ]);
@@ -48,15 +55,58 @@ const CreateJob = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Integrate with Soroban smart contract
-    console.log({ ...formData, milestones });
-    navigate('/jobs');
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      if (!isConnected || !publicKey) {
+        await connect();
+        return;
+      }
+
+      // Validate total percentage
+      const totalPercentage = milestones.reduce((sum, m) => sum + m.percentage, 0);
+      if (totalPercentage !== 100) {
+        throw new Error('Total milestone percentage must equal 100');
+      }
+
+      // Validate budget
+      const budget = parseFloat(formData.budget);
+      if (isNaN(budget) || budget <= 0) {
+        throw new Error('Budget must be greater than 0');
+      }
+
+      // Format milestones for contract
+      const formattedMilestones = milestones.map(m => ({
+        title: m.title,
+        description: m.description,
+        percentage: m.percentage,
+        dueDate: new Date(m.dueDate).getTime() / 1000 // Convert to Unix timestamp
+      }));
+
+      // Create job on contract
+      await createJob(publicKey, budget, formattedMilestones);
+      
+      // Navigate to jobs page on success
+      navigate('/jobs');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create job');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <PageTransition>
       <div className="min-h-screen bg-white flex flex-col">
         <h1 className="text-4xl font-bold text-gray-900 mb-6 text-center mt-6">Create New Job</h1>
+        {error && (
+          <div className="max-w-7xl mx-auto px-4 mb-4">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 flex-1 w-full">
           {/* Left Column: Combined Photo + Instructions Card */}
           <div className="rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col bg-white h-full self-stretch">
@@ -166,9 +216,10 @@ const CreateJob = () => {
               </div>
               <button
                 type="submit"
-                className="mt-8 w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl text-lg"
+                disabled={isSubmitting}
+                className={`mt-8 w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl text-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Post Job
+                {isSubmitting ? 'Creating Job...' : isConnected ? 'Post Job' : 'Connect Wallet to Post Job'}
               </button>
             </div>
             {/* Milestones Card */}
