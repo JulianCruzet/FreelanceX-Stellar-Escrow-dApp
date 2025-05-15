@@ -57,9 +57,9 @@ const JobDetails = () => {
       case 'completed':
         return 'bg-green-100 text-green-700';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-orange-100 text-orange-700';
       case 'approved':
-        return 'bg-purple-100 text-purple-700';
+        return 'bg-orange-100 text-orange-700';
       default:
         return 'bg-gray-100 text-gray-700';
     }
@@ -80,7 +80,7 @@ const JobDetails = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
               <p className="text-gray-600">{job.company}</p>
             </div>
-            <span className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium">
+            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl font-medium">
               {job.budget}
             </span>
           </div>
@@ -140,7 +140,7 @@ const JobDetails = () => {
                 {milestone.status === 'completed' && (
                   <button
                     onClick={() => handleApproveMilestone(milestone.id)}
-                    className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all transform hover:scale-105 shadow-lg"
                   >
                     Approve & Release Payment
                   </button>

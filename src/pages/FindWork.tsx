@@ -13,6 +13,7 @@ interface Job {
   location: string;
   duration: string;
   postedAt: string;
+  image: string;
 }
 
 const mockJobs: Job[] = [
@@ -26,6 +27,7 @@ const mockJobs: Job[] = [
     location: 'Remote',
     duration: '4 weeks',
     postedAt: '2024-03-10',
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop'
   },
   {
     id: 2,
@@ -37,6 +39,7 @@ const mockJobs: Job[] = [
     location: 'Remote',
     duration: '6 weeks',
     postedAt: '2024-03-09',
+    image: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1000&auto=format&fit=crop'
   },
   {
     id: 3,
@@ -48,6 +51,7 @@ const mockJobs: Job[] = [
     location: 'Remote',
     duration: '3 weeks',
     postedAt: '2024-03-08',
+    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop'
   },
 ];
 
@@ -146,48 +150,63 @@ const FindWork = () => {
                 <Link
                   key={job.id}
                   to={`/job/${job.id}`}
-                  className="block bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+                  className="block bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group h-[240px]"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-1">{job.title}</h3>
-                      <p className="text-gray-600">{job.company}</p>
+                  <div className="relative flex h-full">
+                    {/* Content Section */}
+                    <div className="w-[60%] p-5 flex flex-col">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-900 mb-1 group-hover:text-orange-500 transition-colors">{job.title}</h3>
+                          <p className="text-gray-600">{job.company}</p>
+                        </div>
+                        <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl font-medium">
+                          {job.budget}
+                        </span>
+                      </div>
+
+                      <p className="text-gray-700 mb-3 line-clamp-2 flex-grow">{job.description}</p>
+
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {job.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
+                        <div className="flex items-center space-x-4">
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {job.location}
+                          </span>
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {job.duration}
+                          </span>
+                        </div>
+                        <span>Posted {new Date(job.postedAt).toLocaleDateString()}</span>
+                      </div>
                     </div>
-                    <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl font-medium">
-                      {job.budget}
-                    </span>
-                  </div>
 
-                  <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {job.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center space-x-4">
-                      <span className="flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {job.location}
-                      </span>
-                      <span className="flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {job.duration}
-                      </span>
+                    {/* Image Section with Gradient */}
+                    <div className="w-[40%] relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/50 to-transparent z-10" />
+                      <img
+                        src={job.image}
+                        alt={job.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <span>Posted {new Date(job.postedAt).toLocaleDateString()}</span>
                   </div>
                 </Link>
               ))}
