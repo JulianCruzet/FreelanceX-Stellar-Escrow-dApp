@@ -1,15 +1,38 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { PasskeyKit } from 'passkey-kit';
+
+// TODO: Integrate with Stellar passkey
 
 const Navbar = () => {
   const location = useLocation();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
 
+  // const passkeyKit = new PasskeyKit({
+  //   rpcUrl: 'https://horizon-testnet.stellar.org',
+  //   networkPassphrase: 'Test SDF Network ; September 2015',
+  //   factoryContractId: 'SMART CONTRACT ADDRESS GOES HERE'
+  // })
+
+  const handleRegisterWallet = async () => {
+    try {
+      // const { walletAddress } = await passkeyKit.createWallet();
+      setIsWalletConnected(true);
+      setWalletAddress(walletAddress);
+    } catch (error) {
+      console.error('Wallet registration failed:', error);
+    }
+  }
+
   const handleConnectWallet = async () => {
-    // TODO: Integrate with Freighter wallet
-    setIsWalletConnected(true);
-    setWalletAddress('GABC...1234'); // Mock address
+    try {
+      //const { walletAddress } = await passkeyKit.connectWallet();
+      setIsWalletConnected(true);
+      setWalletAddress(walletAddress); 
+    } catch (error) {
+      console.error('Wallet connection failed:', error);
+    }
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -57,24 +80,32 @@ const Navbar = () => {
               </Link>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
             {isWalletConnected ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">{walletAddress}</span>
+              <>
+                <span className="text-sm text-gray-500 truncate max-w-xs">{walletAddress}</span>
                 <Link
                   to="/profile"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-orange-500 bg-orange-50 hover:bg-orange-100"
                 >
                   Profile
                 </Link>
-              </div>
+              </>
             ) : (
-              <button
-                onClick={handleConnectWallet}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-              >
-                Connect Wallet
-              </button>
+              <>
+                <button
+                  // onClick={handleRegisterWallet}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
+                >
+                  Register
+                </button>
+                <button
+                  // onClick={handleConnectWallet}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600"
+                >
+                  Sign In
+                </button>
+              </>
             )}
           </div>
         </div>

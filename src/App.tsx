@@ -7,6 +7,8 @@ import FindWork from './pages/FindWork';
 import CreateJob from './pages/CreateJob';
 import JobDetails from './pages/JobDetails';
 import Profile from './pages/Profile';
+import { PasskeyServer } from 'passkey-kit';
+import { useEffect } from 'react';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -34,5 +36,22 @@ const App = () => {
     </Router>
   );
 };
+
+// const App: React.FC = () => {
+//   useEffect(() => {
+//     const intializePasskeyKit = async () =>
+//       const passkeyKit = new passkeyKit ({
+//         network: 'testnet',
+//       });
+//     };
+//     intializePasskeyKit();
+//   }, []);
+
+//   return (
+//       <div className="App">
+//         { }
+//       </div>
+//   );
+// };
 
 export default App;
