@@ -21,13 +21,20 @@ FreelanceX is a decentralized escrow platform built on Stellar Soroban smart con
 ## 🏗️ Project Structure
 
 ```
-src/
-├── components/     # Reusable UI components
-├── pages/         # Page components
-├── contracts/     # Smart contract code
-├── hooks/         # Custom React hooks
-├── utils/         # Utility functions
-└── types/         # TypeScript type definitions
+FreelanceX-Stellar-Escrow-dApp/
+├── new_build/                 # Rust-based Soroban smart contracts
+│   ├── Cargo.toml
+│   └── src/
+├── frontend/                  # React + TypeScript frontend
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── tsconfig.json
+├── scripts/                   # Deployment and utility scripts
+├── .gitignore
+├── README.md
+└── LICENSE
 ```
 
 ## 🚀 Getting Started
