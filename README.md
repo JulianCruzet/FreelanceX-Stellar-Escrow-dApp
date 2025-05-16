@@ -48,7 +48,7 @@ FreelanceX leverages Stellar Soroban smart contracts for secure and transparent 
 
 ## 🎥 Project Walkthrough
 
-[![Project Walkthrough](https://img.youtube.com/vi/Yb-Z5llxOk0/0.jpg)](https://youtu.be/Yb-Z5llxOk0)
+[![Project Walkthrough](https://img.youtube.com/vi/Yb-Z5llxOk0/0.jpg)](https://www.youtube.com/watch?v=Yb-Z5llxOk0)
 
 In this comprehensive walkthrough, we cover:
 - Project architecture and codebase structure
