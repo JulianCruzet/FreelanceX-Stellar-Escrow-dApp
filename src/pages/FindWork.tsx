@@ -26,7 +26,7 @@ const mockJobs: Job[] = [
     skills: ['React', 'TypeScript', 'Solidity'],
     location: 'Remote',
     duration: '4 weeks',
-    postedAt: '2024-03-10',
+    postedAt: '2025-03-10',
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop'
   },
   {
