@@ -19,10 +19,10 @@ interface Job {
 const mockJobs: Job[] = [
   {
     id: 1,
-    title: 'Full Stack Developer',
+    title: 'Web3 Developer for DApp',
     company: 'Web3 Ventures',
     budget: '5000 USDC',
-    description: 'Looking for an experienced full stack developer to build a decentralized application...',
+    description: 'Looking for an experienced Web3 developer to build a decentralized application with smart contracts and frontend integration',
     skills: ['React', 'TypeScript', 'Solidity'],
     location: 'Remote',
     duration: '4 weeks',
