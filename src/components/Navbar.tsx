@@ -67,29 +67,14 @@ const Navbar: React.FC = () => {
       const storedKeyId = localStorage.getItem('ssd:keyId');
       if (storedKeyId) {
         setKeyId(storedKeyId);
+        // Do NOT set isWalletConnected or contractId here
       }
     }
   }, []);
 
   useEffect(() => {
-    // Connect wallet when keyId changes and module is loaded
-    const connectWallet = async () => {
-      if (keyId && isLoaded && account) {
-        try {
-          const { contractId: cid } = await account.connectWallet({
-            keyId: keyId,
-          });
-          setContractId(cid);
-          setIsWalletConnected(true);
-          setWalletAddress(truncate(cid));
-        } catch (error) {
-          console.error('Error connecting wallet:', error);
-          setError('Failed to connect wallet. Please try again.');
-        }
-      }
-    };
-
-    connectWallet();
+    // Only try to connect wallet if user explicitly logs in
+    // Remove auto-connect logic here
   }, [keyId, isLoaded]);
 
   const handleLogin = async () => {
@@ -137,9 +122,8 @@ const Navbar: React.FC = () => {
       setKeyId(keyIdBase64);
       localStorage.setItem('ssd:keyId', keyIdBase64);
 
-      setContractId(cid);
-      setIsWalletConnected(true);
-      setWalletAddress(truncate(cid));
+      // Do NOT set contractId, isWalletConnected, or walletAddress here
+      setError('Registration successful! Please log in with your passkey.');
     } catch (error) {
       console.error('Sign up error:', error);
       setError('Registration failed. Please try again.');
@@ -217,7 +201,7 @@ const Navbar: React.FC = () => {
             {error && (
               <span className="text-sm text-red-500">{error}</span>
             )}
-            {isWalletConnected || contractId ? (
+            {isWalletConnected ? (
               <>
                 <span className="text-sm text-gray-500 truncate max-w-xs">
                   {walletAddress || (contractId ? truncate(contractId, 4) : '')}
