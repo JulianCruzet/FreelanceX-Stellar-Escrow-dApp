@@ -66,7 +66,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-6 pt-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-xs">© 2024 FreelanceX. All rights reserved.</p>
+            <p className="text-gray-400 text-xs">© 2025 FreelanceX. All rights reserved.</p>
             <div className="flex space-x-6 mt-2 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-orange-400 transition-colors text-xs">Status</a>
               <a href="#" className="text-gray-400 hover:text-orange-400 transition-colors text-xs">Contact</a>
