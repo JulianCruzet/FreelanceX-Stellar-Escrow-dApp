@@ -2,6 +2,61 @@
 
 FreelanceX is a decentralized escrow platform built on Stellar Soroban smart contracts that automates freelance payments based on verifiable work milestones.
 
+## 📺 Demo Video
+
+[![FreelanceX Demo Video](https://img.youtube.com/vi/brHOdnTERXA/0.jpg)](https://youtu.be/brHOdnTERXA)
+
+Watch our demo video to see FreelanceX in action! The video demonstrates:
+- Creating and funding escrow contracts
+- Managing milestones and payments
+- Handling disputes and resolutions
+- Cross-border payments with Stellar stablecoins
+
+## 🖼️ Screenshots
+
+### Main Dashboard
+![Dashboard](/public/MainDashboard.png)
+
+### Contract Creation
+![Contract Creation](/public/JobCreation.png)
+
+### Milestone Management
+![Milestone Management](/public/MilestoneManagement.png)
+
+### Payment Processing
+![Payment Processing](/public/PaymentProcessing.png)
+
+## 🔗 Blockchain Integration
+
+FreelanceX leverages Stellar Soroban smart contracts for secure and transparent escrow management:
+
+1. **Smart Contract Architecture**
+   - Escrow contracts are deployed on Stellar's Soroban network
+   - Each contract is uniquely identified by a contract ID
+   - Funds are locked in the contract until milestone completion
+
+2. **Payment Flow**
+   - Clients fund escrow contracts using Stellar stablecoins
+   - Smart contracts verify milestone completion
+   - Automatic payment release upon milestone approval
+   - Dispute resolution through on-chain voting
+
+3. **Security Features**
+   - Multi-signature requirements for large transactions
+   - Time-locked releases for dispute resolution
+   - Transparent transaction history on Stellar blockchain
+
+## 🎥 Project Walkthrough
+
+[![Project Walkthrough](https://img.youtube.com/vi/brHOdnTERXA/0.jpg)](https://youtu.be/brHOdnTERXA)
+
+In this comprehensive walkthrough, we cover:
+- Project architecture and codebase structure
+- Smart contract implementation details
+- Frontend development and UI/UX decisions
+- Testing and deployment process
+- Future roadmap and improvements
+
 ## 🚀 Features
 
 - **Smart Contract Escrow**: Secure funds in Stellar Soroban smart contracts
