@@ -48,7 +48,7 @@ FreelanceX leverages Stellar Soroban smart contracts for secure and transparent 
 
 ## 🎥 Project Walkthrough
 
-[![Project Walkthrough](https://img.youtube.com/vi/brHOdnTERXA/0.jpg)](https://youtu.be/brHOdnTERXA)
+[![Project Walkthrough](https://img.youtube.com/vi/Yb-Z5llxOk0/0.jpg)](https://youtu.be/Yb-Z5llxOk0)
 
 In this comprehensive walkthrough, we cover:
 - Project architecture and codebase structure
@@ -56,6 +56,7 @@ In this comprehensive walkthrough, we cover:
 - Frontend development and UI/UX decisions
 - Testing and deployment process
 - Future roadmap and improvements
+- Passkey kit integration and smart wallet features
 
 ## 🚀 Features
 
@@ -64,6 +65,8 @@ In this comprehensive walkthrough, we cover:
 - **Multicurrency Support**: Use Stellar stablecoins for cross-border payments
 - **Identity & Reputation**: Optional KYC and on-chain ratings
 - **Modern UI/UX**: Clean, intuitive interface built with React and Tailwind CSS
+- **Passkey Authentication**: Secure and convenient login using passkeys
+- **Smart Wallet Integration**: Enhanced wallet functionality with smart contract capabilities
 
 ## 🛠️ Tech Stack
 
