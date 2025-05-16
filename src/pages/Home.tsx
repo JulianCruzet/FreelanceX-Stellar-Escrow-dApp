@@ -66,10 +66,11 @@ const successStories = [
 
 const CAROUSEL_INTERVAL = 5000;
 
-const HERO_VIDEO_URL = "/workflowBroll.mov";
+const HERO_VIDEO_URL = "/videos/workflowBroll.mov";
 
 const Home = () => {
   const [currentStory, setCurrentStory] = useState(0);
+  const [videoError, setVideoError] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -86,12 +87,18 @@ const Home = () => {
         try {
           await videoRef.current?.play();
         } catch (error) {
-          console.log('Autoplay failed:', error);
+          console.error('Video autoplay failed:', error);
+          setVideoError(true);
         }
       };
       playVideo();
     }
   }, []);
+
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    console.error('Video failed to load:', e);
+    setVideoError(true);
+  };
 
   const goToStory = (idx: number) => setCurrentStory(idx);
   const prevStory = () => setCurrentStory((prev) => (prev - 1 + successStories.length) % successStories.length);
@@ -102,16 +109,19 @@ const Home = () => {
       {/* HERO SECTION: Full local video background with overlay and centered content */}
       <section className="relative w-full h-[650px] flex items-center justify-center overflow-hidden bg-gradient-to-r from-yellow-400 to-orange-500">
         {/* Local video background */}
-        <video
-          ref={videoRef}
-          src={HERO_VIDEO_URL}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
-        />
+        {!videoError && (
+          <video
+            ref={videoRef}
+            src={HERO_VIDEO_URL}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            onError={handleVideoError}
+            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          />
+        )}
         {/* Overlay: always present for contrast */}
         <div className="absolute inset-0 bg-black/40 z-20 transition-opacity duration-700 opacity-100" />
         {/* Leftmost Content */}
